@@ -8,13 +8,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-public class Table {
+import DB.tabels.User;
+
+public class Table{
 
 	public String table_name = null;
 	public String primary_id = null;
 
 	private ArrayList<String> columns = new ArrayList<String>();
-	private HashMap<String, Object > column = new HashMap<String, Object >();
+	private HashMap<String, Object> column = new HashMap<String, Object>();
 	Statement statement = null;
 
 	private String select;
@@ -22,7 +24,7 @@ public class Table {
 	private String lastQuery;
 	private ArrayList<String> insertColumns = new ArrayList<String>();
 	private ArrayList<Object> insertValues = new ArrayList<Object>();
-	
+
 	public Table(String table_name) {
 		this.table_name = table_name;
 		getColumnsNames();
@@ -99,7 +101,7 @@ public class Table {
 			query += "WHERE " + this.where;
 		executeUpdate(query);
 	}
-	
+
 	public Table updateValue(String colName, Object val) {
 
 		this.insertColumns.add(colName);
@@ -107,20 +109,18 @@ public class Table {
 
 		return this;
 	}
-	
+
 	public void update() throws SQLException {
 		String query = "UPDATE " + this.table_name + " SET ";
-		
+
 		for (int i = 0; i < insertColumns.size(); i++) {
-			query += "`" + insertColumns.get(i) + "`"+
-		 " = "+insertValues.get(i);
+			query += "`" + insertColumns.get(i) + "`" + " = "
+					+ insertValues.get(i);
 			if (insertColumns.size() != i + 1)
 				query += ",";
 		}
 		query += " ";
-		
 
-		
 		if (this.where != null)
 			query += "WHERE " + this.where;
 		executeUpdate(query);
@@ -168,7 +168,21 @@ public class Table {
 
 		executeUpdate(query);
 	}
+
 	public String getLastQuery() {
 		return lastQuery;
+	}
+
+	public void find(Object id) throws SQLException {
+		this.where = "id = "+id;
+		ResultSet rs = this.get();
+		if(rs.next())
+			for(String col : columns){
+				column.put(col, rs.getObject(col));
+			}
+	}
+	
+	public Object getCol(String col){
+		return column.get(col);
 	}
 }
