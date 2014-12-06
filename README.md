@@ -23,14 +23,15 @@ Usage
 -----
 For starting the connecntion `Database.startConnection();` and for closing `Database.closeConnection();`
 
-###Select (single row)
-use `user.get("user_id")`
+###Select 
+for single record use `user.get("user_id")`
     
     User user = new User();
     user.get(3);
     System.out.println(user.getCol("first_name"));
 
-###Select 
+for result set:
+
     ResultSet rs = DB.select("id , username").from("users").where("id > 5").get();
 		
 ###Insert 
@@ -52,3 +53,4 @@ use `user.get("user_id")`
     user.get(3);
     user.delete();
 
+	DB.from("users").where("id > 5").delete();
