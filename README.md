@@ -23,22 +23,32 @@ Usage
 -----
 For starting the connecntion `Database.startConnection();` and for closing `Database.closeConnection();`
 
-###Select single row 
+###Select (single row)
 use `user.get("user_id")`
     
     User user = new User();
     user.get(3);
     System.out.println(user.getCol("first_name"));
 
-###Delete     
-    User user = new User();
-    user.get(3);
-    user.delete();
-
+###Select 
+    ResultSet rs = DB.select("id , username").from("users").where("id > 5").get();
+		
 ###Insert 
     User user = new User();
     user.setCol("id",3);
     user.setCol("first_name","Mohamed");
     user.setCol("age",20);
     user.insert();
+
+###Update
+    User user = new User();
+    user.get(3);
+    user.setCol("first_name","Ahmed");
+    user.update();
+
+
+###Delete     
+    User user = new User();
+    user.get(3);
+    user.delete();
 
