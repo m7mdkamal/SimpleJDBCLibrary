@@ -54,4 +54,5 @@ for result set:
     user.delete();
 
 or
+
     DB.from("users").where("id > 5").delete();
