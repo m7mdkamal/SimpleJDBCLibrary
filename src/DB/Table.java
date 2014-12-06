@@ -10,10 +10,10 @@ import java.util.Hashtable;
 
 import DB.tabels.User;
 
-public class Table{
+public class Table extends DB {
 
 	public String table_name = null;
-	public String primary_id = null;
+	public String primary_key = null;
 
 	private ArrayList<String> columns = new ArrayList<String>();
 	private HashMap<String, Object> column = new HashMap<String, Object>();
@@ -21,7 +21,6 @@ public class Table{
 
 	private String select;
 	private String where;
-	private String lastQuery;
 	private ArrayList<String> insertColumns = new ArrayList<String>();
 	private ArrayList<Object> insertValues = new ArrayList<Object>();
 
@@ -30,9 +29,9 @@ public class Table{
 		getColumnsNames();
 	}
 
-	public Table(String table_name, String primary_id) {
+	public Table(String table_name, String primary_key) {
 		this.table_name = table_name;
-		this.primary_id = primary_id;
+		this.primary_key = primary_key;
 		getColumnsNames();
 	}
 
@@ -55,22 +54,6 @@ public class Table{
 		}
 		;
 		return columns;
-	}
-
-	public ResultSet executeQuery(String query) throws SQLException {
-		statement = Database.getConnection().createStatement();
-		ResultSet results = statement.executeQuery(query);
-		this.lastQuery = query;
-		clearVariables();
-		return results;
-
-	}
-
-	public void executeUpdate(String query) throws SQLException {
-		statement = Database.getConnection().createStatement();
-		statement.executeUpdate(query);
-		this.lastQuery = query;
-		clearVariables();
 	}
 
 	public ResultSet getAll() throws SQLException {
@@ -99,6 +82,9 @@ public class Table{
 		String query = "DELETE FROM " + this.table_name + " ";
 		if (this.where != null)
 			query += "WHERE " + this.where;
+		else
+			query += "WHERE `" + primary_key + "` = " + getCol(primary_key) + " ";
+		
 		executeUpdate(query);
 	}
 
@@ -114,8 +100,8 @@ public class Table{
 		String query = "UPDATE " + this.table_name + " SET ";
 
 		for (int i = 0; i < insertColumns.size(); i++) {
-			query += "`" + insertColumns.get(i) + "`" + " = "
-					+ insertValues.get(i);
+			query += "`" + insertColumns.get(i) + "`" + " = " + "\'"
+					+ insertValues.get(i) + "\'";
 			if (insertColumns.size() != i + 1)
 				query += ",";
 		}
@@ -123,29 +109,16 @@ public class Table{
 
 		if (this.where != null)
 			query += "WHERE " + this.where;
+		else
+			query += "WHERE " + primary_key + " = " + getCol(primary_key) + " ";
 		executeUpdate(query);
 	}
 
-	public Table select() {
-		this.select = null;
-		return this;
-	}
-
-	public Table select(String colNames) {
-		this.select = colNames;
-		return this;
-	}
-
-	public Table where(String condition) {
-		this.where = condition;
-		return this;
-	}
-
-	public Table insertValue(String colName, Object val) {
+	public Table setCol(String colName, Object val) {
 
 		this.insertColumns.add(colName);
 		this.insertValues.add(val);
-
+		this.column.put(colName, val);
 		return this;
 	}
 
@@ -169,20 +142,16 @@ public class Table{
 		executeUpdate(query);
 	}
 
-	public String getLastQuery() {
-		return lastQuery;
-	}
-
-	public void find(Object id) throws SQLException {
-		this.where = "id = "+id;
+	public void get(Object id) throws SQLException {
+		this.where = primary_key + " = " + id;
 		ResultSet rs = this.get();
-		if(rs.next())
-			for(String col : columns){
+		if (rs.next())
+			for (String col : columns) {
 				column.put(col, rs.getObject(col));
 			}
 	}
-	
-	public Object getCol(String col){
+
+	public Object getCol(String col) {
 		return column.get(col);
 	}
 }

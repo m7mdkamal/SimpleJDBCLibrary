@@ -27,6 +27,7 @@ public class DB {
 
 	public static void executeUpdate(String query) throws SQLException {
 		statement = Database.getConnection().createStatement();
+		System.out.println(query);
 		statement.executeUpdate(query);
 		lastQuery = query;
 		clearVariables();
@@ -53,7 +54,7 @@ public class DB {
 
 	}
 
-	public static void delete() throws SQLException {
+	public void delete() throws SQLException {
 		String query = "DELETE FROM " + from + " ";
 		if (where != null)
 			query += "WHERE " + where;

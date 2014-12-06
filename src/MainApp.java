@@ -1,4 +1,3 @@
-import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import DB.*;
@@ -9,27 +8,12 @@ public class MainApp {
 		
 		
 		Database.startConnection();
-		User u = new User();
-
-		ResultSet r = DB.select().from("users").get();
 		
-		while (r.next()) {
-			System.out.println("----> " + r.getInt(1) + "   "
-					+ r.getString(2));
-		}
-		
-		
-		
-		
-		System.out.println("------------------");
 		User user = new User();
-		ResultSet rs = user.getAll();
-
-		while (rs.next()) {
-			System.out.println("----> " + rs.getInt(1) + "   "
-					+ rs.getString(2));
-		}
-
+		user.setCol("id",5);
+		user.setCol("pass","SAAS");
+		user.insert();
+		user.delete();
 		Database.closeConnection();
 
 	}
