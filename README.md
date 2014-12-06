@@ -1,7 +1,7 @@
-SimpleJDBCLibaray 
+SimpleJDBCLibrary
 =================
 
-Simple Java JDBC Libaray (under development)
+Simple Java JDBC Library (under development)
 
 Configuration
 -------------
