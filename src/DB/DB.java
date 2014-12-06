@@ -54,7 +54,7 @@ public class DB {
 
 	}
 
-	public void delete() throws SQLException {
+	public static void delete() throws SQLException {
 		String query = "DELETE FROM " + from + " ";
 		if (where != null)
 			query += "WHERE " + where;
@@ -66,7 +66,7 @@ public class DB {
 		return DB;
 	}
 
-	public DB from(String f) {
+	public static DB from(String f) {
 		from = f;
 		return DB;
 	}

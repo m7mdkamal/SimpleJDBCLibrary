@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 
-import DB.tabels.User;
+import DB.tables.User;
 
 public class Table extends DB {
 
@@ -65,6 +65,8 @@ public class Table extends DB {
 		this.where = null;
 		insertColumns.clear();
 		insertValues.clear();
+		column.clear();
+		columns.clear();
 	}
 
 	public ResultSet get() throws SQLException {
@@ -78,7 +80,7 @@ public class Table extends DB {
 
 	}
 
-	public void delete() throws SQLException {
+	public void remove() throws SQLException {
 		String query = "DELETE FROM " + this.table_name + " ";
 		if (this.where != null)
 			query += "WHERE " + this.where;
@@ -86,6 +88,7 @@ public class Table extends DB {
 			query += "WHERE `" + primary_key + "` = " + getCol(primary_key) + " ";
 		
 		executeUpdate(query);
+		clearVariables();
 	}
 
 	public Table updateValue(String colName, Object val) {
@@ -122,7 +125,7 @@ public class Table extends DB {
 		return this;
 	}
 
-	public void insert() throws SQLException {
+	public void save() throws SQLException {
 
 		String query = "INSERT INTO " + table_name + " (";
 
